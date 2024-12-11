@@ -85,114 +85,248 @@ class _NewExpense extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
-      child: Column(
-        children: [
-          TextField(
-            controller: _titlecontroller,
-            maxLength: 50,
-            decoration: const InputDecoration(
-              label: Text('Title'),
-            ),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  keyboardType: TextInputType.number,
-                  controller: _amountcontroller,
-                  decoration: const InputDecoration(
-                    prefixText: '\$ ',
-                    label: Text('Amount'),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      _selectedDate == null
-                          ? 'No date selected'
-                          : formatter.format(_selectedDate!),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.calendar_month),
-                      onPressed: _presentDatePicker,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          Row(
-            children: [
-              DropdownButton(
-                value: _selectedCategory,
-                /*This binds the currently selected value of the dropdown
-                 to the _selectedCategory variable. Initially, _selectedCategory
-                 is set to Category.leisure as per the initialization. The 
-                 DropdownButton will display this value (i.e., leisure) as the
-                 selected item in the dropdown when the widget is rendered.*/
-                items: Category
-                    .values /*This creates the list of items (options) for the
-                     dropdown.*/
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+    print(keyboardSpace);
 
-                    .map(
-                      (category) => DropdownMenuItem(
-                        /* The map function is used to convert each enum value 
-                        into a DropdownMenuItem widget. Each DropdownMenuItem 
-                        represents a single item in the dropdown list and has a
-                         value and a child.*/
-                        value: category,
-                        /* This is the arguement that stores the selected item
-                        in the dropdownbutton and  this value will be passed to
-                         the onChanged call back */
-                        child: Text(
-                          category.name.toUpperCase(),
-                          /* This displays the name of the category 
-                          (in uppercase) as the label for each dropdown item.
-                           category.name gets the name of the enum value (for
-                            example, leisure, food, etc.), and toUpperCase() 
-                            converts it to uppercase for visual styling. */
+    return LayoutBuilder(builder: (ctx, constraints) {
+      /*The constraint widget helps you know the constraint
+       that the parent widget has given to its child widget.
+       The constraint helps you know how much width and height
+       is available for this widget (child widget) */
+      final width = constraints.maxWidth;
+      final height = constraints.maxHeight;
+      print(width);
+      print(height);
+
+      return SizedBox(
+        height: double.infinity,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(16, 48, 16, keyboardSpace + 90),
+            child: Column(
+              children: [
+                if (width >= 600)
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _titlecontroller,
+                          maxLength: 50,
+                          decoration: const InputDecoration(
+                            label: Text('Title'),
+                          ),
                         ),
                       ),
-                    )
-                    .toList(),
-                /*toList() is called at the end to convert the iterable 
-                    returned by map into a list.*/
-                onChanged: (value) {
-                  if (value == null) {
-                    return;
-                  }
-                  setState(
-                    () {
-                      _selectedCategory = value;
-                    },
-                  );
-                },
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Cancel'),
-              ),
-              ElevatedButton(
-                onPressed: _submitExpenseData,
-                child: const Text('Save Expense'),
-              ),
-            ],
+                      const SizedBox(
+                        width: 24,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          controller: _amountcontroller,
+                          decoration: const InputDecoration(
+                            prefixText: '\$ ',
+                            label: Text('Amount'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  TextField(
+                    controller: _titlecontroller,
+                    maxLength: 50,
+                    decoration: const InputDecoration(
+                      label: Text('Title'),
+                    ),
+                  ),
+                if (width >= 600)
+                  Row(
+                    children: [
+                      DropdownButton(
+                        value: _selectedCategory,
+                        /*This binds the currently selected value of the dropdown
+                     to the _selectedCategory variable. Initially, _selectedCategory
+                     is set to Category.leisure as per the initialization. The 
+                     DropdownButton will display this value (i.e., leisure) as the
+                     selected item in the dropdown when the widget is rendered.*/
+                        items: Category
+                            .values /*This creates the list of items (options) for the
+                         dropdown.*/
+
+                            .map(
+                              (category) => DropdownMenuItem(
+                                /* The map function is used to convert each enum value 
+                            into a DropdownMenuItem widget. Each DropdownMenuItem 
+                            represents a single item in the dropdown list and has a
+                             value and a child.*/
+                                value: category,
+                                /* This is the arguement that stores the selected item
+                            in the dropdownbutton and  this value will be passed to
+                             the onChanged call back */
+                                child: Text(
+                                  category.name.toUpperCase(),
+                                  /* This displays the name of the category 
+                              (in uppercase) as the label for each dropdown item.
+                               category.name gets the name of the enum value (for
+                                example, leisure, food, etc.), and toUpperCase() 
+                                converts it to uppercase for visual styling. */
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        /*toList() is called at the end to convert the iterable 
+                        returned by map into a list.*/
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setState(
+                            () {
+                              _selectedCategory = value;
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(width: 24),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              _selectedDate == null
+                                  ? 'No date selected'
+                                  : formatter.format(_selectedDate!),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.calendar_month),
+                              onPressed: _presentDatePicker,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          keyboardType: TextInputType.number,
+                          controller: _amountcontroller,
+                          decoration: const InputDecoration(
+                            prefixText: '\$ ',
+                            label: Text('Amount'),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 13),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              _selectedDate == null
+                                  ? 'No date selected'
+                                  : formatter.format(_selectedDate!),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.calendar_month),
+                              onPressed: _presentDatePicker,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                const SizedBox(
+                  height: 16,
+                ),
+                if (width >= 600)
+                  Row(
+                    children: [
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: _submitExpenseData,
+                        child: const Text('Save Expense'),
+                      ),
+                    ],
+                  )
+                else
+                  Row(
+                    children: [
+                      DropdownButton(
+                        value: _selectedCategory,
+                        /*This binds the currently selected value of the dropdown
+                     to the _selectedCategory variable. Initially, _selectedCategory
+                     is set to Category.leisure as per the initialization. The 
+                     DropdownButton will display this value (i.e., leisure) as the
+                     selected item in the dropdown when the widget is rendered.*/
+                        items: Category
+                            .values /*This creates the list of items (options) for the
+                         dropdown.*/
+
+                            .map(
+                              (category) => DropdownMenuItem(
+                                /* The map function is used to convert each enum value 
+                            into a DropdownMenuItem widget. Each DropdownMenuItem 
+                            represents a single item in the dropdown list and has a
+                             value and a child.*/
+                                value: category,
+                                /* This is the arguement that stores the selected item
+                            in the dropdownbutton and  this value will be passed to
+                             the onChanged call back */
+                                child: Text(
+                                  category.name.toUpperCase(),
+                                  /* This displays the name of the category 
+                              (in uppercase) as the label for each dropdown item.
+                               category.name gets the name of the enum value (for
+                                example, leisure, food, etc.), and toUpperCase() 
+                                converts it to uppercase for visual styling. */
+                                ),
+                              ),
+                            )
+                            .toList(),
+                        /*toList() is called at the end to convert the iterable 
+                        returned by map into a list.*/
+                        onChanged: (value) {
+                          if (value == null) {
+                            return;
+                          }
+                          setState(
+                            () {
+                              _selectedCategory = value;
+                            },
+                          );
+                        },
+                      ),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: _submitExpenseData,
+                        child: const Text('Save Expense'),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
           ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }

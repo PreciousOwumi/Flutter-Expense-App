@@ -40,7 +40,8 @@ class ExpensesList extends StatelessWidget {
         child: ExpenseItem(
           expenses[index],
           /* in the expense list we determine or set how all the argument
-          values in each Expense widget are to be arranged in the ListView.builder*/
+          values in each Expense widget are to be arranged in the
+           ListView.builder*/
         ),
       ),
     );

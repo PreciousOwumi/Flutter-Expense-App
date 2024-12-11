@@ -48,8 +48,12 @@ class _ExpensesState extends State<Expenses> {
 
   void _removeExpenses(Expense expense) {
     final expenseIndex = _registeredExpenses.indexOf(expense);
+    /*here you accesss a particular expense in _registeredExpenses using its 
+    index*/
     setState(() {
       _registeredExpenses.remove(expense);
+      /*here you remove the particular expense you accessed in the 
+      _registeredEpenses*/
     });
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -69,6 +73,18 @@ class _ExpensesState extends State<Expenses> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    /* MediaQuery.of(context) provides information about the device's screen
+     size, orientation, and other related details, such as padding, text 
+     scaling, etc.
+     
+    MediaQuery.of(context).size gives the size of the screen as a
+    Size object, which has properties like width and height. 
+
+    MediaQuery.of(context).size.width specifically accesses the width of the 
+    screen, which can be useful for responsive design. It tells you how wide 
+    the screen is, allowing you to adapt your UI accordingly.*/
+
     Widget mainContent = const Center(
       child: Text('No expenses found. Start adding some!'),
     );
@@ -89,12 +105,19 @@ class _ExpensesState extends State<Expenses> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Chart(expenses: _registeredExpenses),
-          Expanded(child: mainContent),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                Chart(expenses: _registeredExpenses),
+                Expanded(child: mainContent),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: Chart(expenses: _registeredExpenses)),
+                Expanded(child: mainContent),
+              ],
+            ),
     );
   }
 }

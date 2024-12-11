@@ -1,5 +1,7 @@
 import 'package:competence/widget/expenses.dart';
 
+// import 'package:flutter/services.dart';
+
 import 'package:flutter/material.dart';
 
 var kColorScheme = ColorScheme.fromSeed(
@@ -12,6 +14,10 @@ var kDarkColorScheme = ColorScheme.fromSeed(
 );
 
 void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  // DeviceOrientation.portraitUp,
+  // ]).then((fn) {
   runApp(
     MaterialApp(
       darkTheme: ThemeData.dark().copyWith(
@@ -57,7 +63,17 @@ void main() {
             ),
       ),
       themeMode: ThemeMode.system,
+      /*ThemeMode.system: When you use this, your app will follow the system's 
+      theme preference (light or dark). If the user has set their device to 
+      dark mode, the app will switch to dark mode; if the user is in light mode,
+       the app will follow suit.
+
+      ThemeMode.light: Forces the app to use the light theme, regardless of 
+      the system settings.
+      ThemeMode.dark: Forces the app to use the dark theme, regardless of the 
+      system settings.*/
       home: const Expenses(),
     ),
   );
+  // });
 }
